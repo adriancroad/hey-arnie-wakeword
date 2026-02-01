@@ -1,12 +1,24 @@
 #!/bin/bash
 # Hey Arnie Wake Word - Mac Setup Script
-# Run this on your Mac to set up the training environment
+# Run this FROM the cloned repo folder!
+#
+# Usage:
+#   cd ~/Dev/hey-arnie-wakeword
+#   chmod +x scripts/setup_mac.sh
+#   ./scripts/setup_mac.sh
 
 set -e
 
 echo "🏋️ ARNIE WAKE WORD TRAINING SETUP"
 echo "=================================="
 echo ""
+
+# Get the directory where the repo is (parent of scripts/)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
+echo "📁 Project directory: $PROJECT_DIR"
+cd "$PROJECT_DIR"
 
 # Check for Homebrew
 if ! command -v brew &> /dev/null; then
@@ -30,26 +42,11 @@ echo ""
 echo "📦 Installing system dependencies..."
 brew install ffmpeg sox
 
-# Create project directory
-PROJECT_DIR="$HOME/hey-arnie-wakeword"
-echo ""
-echo "📁 Setting up project at: $PROJECT_DIR"
-mkdir -p "$PROJECT_DIR"
-cd "$PROJECT_DIR"
-
-# Clone microWakeWord
-if [ ! -d "microWakeWord" ]; then
-    echo "📥 Cloning microWakeWord repository..."
-    git clone https://github.com/kahrendt/microWakeWord.git
-else
-    echo "✅ microWakeWord already cloned"
-fi
-
-# Create virtual environment
+# Create virtual environment IN the project directory
 echo ""
 echo "🐍 Creating Python virtual environment..."
-python3 -m venv venv
-source venv/bin/activate
+python3 -m venv "$PROJECT_DIR/venv"
+source "$PROJECT_DIR/venv/bin/activate"
 
 # Install Python dependencies
 echo ""
@@ -60,17 +57,19 @@ pip install numpy scipy librosa soundfile
 pip install sounddevice  # For Mac microphone recording
 pip install piper-tts  # For synthetic sample generation
 
-# Create sample directories
-mkdir -p samples/{positive,negative}
-mkdir -p trained_model
+# Create sample directories (if not exist)
+mkdir -p "$PROJECT_DIR/samples/positive"
+mkdir -p "$PROJECT_DIR/samples/negative"
+mkdir -p "$PROJECT_DIR/trained_model"
 
 echo ""
 echo "✅ SETUP COMPLETE!"
 echo ""
+echo "Your project is at: $PROJECT_DIR"
+echo ""
 echo "Next steps:"
-echo "1. Activate the environment: source venv/bin/activate"
-echo "2. Generate synthetic samples: python generate_samples.py"
-echo "3. Record real samples with your iPhone"
-echo "4. Train the model: python train_model.py"
+echo "  cd $PROJECT_DIR"
+echo "  source venv/bin/activate"
+echo "  python scripts/generate_samples.py"
 echo ""
 echo "💪 LET'S DO THIS!"
