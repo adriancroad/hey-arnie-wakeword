@@ -50,24 +50,38 @@ This creates ~200 synthetic "Hey Arnie" samples using macOS voices.
 
 Synthetic samples get you started, but **real recordings make it work well**.
 
-**On your iPhone:**
-1. Open **Voice Memos** app
-2. Start recording
-3. Say "Hey Arnie" clearly, then pause 1-2 seconds
-4. Repeat 20-30 times
-5. Stop recording
-6. AirDrop to your Mac
+#### Option A: Record Directly on Mac (Recommended) 🎤
+
+```bash
+python scripts/record_samples_mac.py
+```
+
+This opens an interactive recording session:
+- Press **ENTER** to record a 2-second sample
+- Say "Hey Arnie" clearly after the countdown
+- Press **Q** when done
+- Record 20-30 samples minimum
+
+**For negative samples (phrases that shouldn't trigger):**
+```bash
+python scripts/record_samples_mac.py --negative
+```
+
+#### Option B: Record on iPhone, Transfer to Mac
+
+1. Open **Voice Memos** app on iPhone
+2. Say "Hey Arnie" with 1-2 second pauses between each
+3. AirDrop recording to your Mac
+4. Process it:
+```bash
+python scripts/process_iphone_recordings.py ~/Downloads/your_recording.m4a
+```
 
 **Tips for good samples:**
 - Vary your tone (normal, tired, excited, questioning)
 - Vary your distance (close, arm's length, across room)
 - Get Angela and Alden to record too!
 - Different voices = better accuracy
-
-**Process the recordings:**
-```bash
-python scripts/process_iphone_recordings.py ~/Downloads/your_recording.m4a
-```
 
 ### Step 4: Generate Negative Samples
 

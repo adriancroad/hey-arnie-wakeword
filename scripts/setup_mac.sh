@@ -57,6 +57,7 @@ echo "📦 Installing Python dependencies..."
 pip install --upgrade pip
 pip install tensorflow==2.15.0
 pip install numpy scipy librosa soundfile
+pip install sounddevice  # For Mac microphone recording
 pip install piper-tts  # For synthetic sample generation
 
 # Create sample directories
