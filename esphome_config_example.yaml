@@ -1,0 +1,86 @@
+# Hey Arnie - ESPHome Wake Word Configuration
+# Add this to your Voice PE / M5Stack Atom Echo config
+#
+# Steps:
+# 1. Copy hey_arnie.tflite to your Home Assistant config/esphome/ folder
+# 2. Add/merge this config with your device's ESPHome YAML
+# 3. Install to your device
+
+# For Home Assistant Voice Preview Edition
+micro_wake_word:
+  # Use the custom Hey Arnie model
+  models:
+    - model: hey_arnie.tflite
+      probability_cutoff: 0.5      # Adjust 0.0-1.0 (higher = less sensitive)
+      sliding_window_size: 10       # Frames to average
+
+  # When wake word is detected
+  on_wake_word_detected:
+    - homeassistant.service:
+        service: assist_pipeline.run
+        data:
+          start_stage: stt
+          end_stage: tts
+
+# Alternative: Keep default wake word as backup
+# micro_wake_word:
+#   models:
+#     - model: hey_arnie.tflite
+#       probability_cutoff: 0.5
+#     - model: okay_nabu  # Fallback wake word
+#       probability_cutoff: 0.5
+
+# -----------------------------------------------------------
+# Full example for M5Stack Atom Echo
+# -----------------------------------------------------------
+# 
+# esphome:
+#   name: arnie-voice-satellite
+#   friendly_name: Arnie Voice
+# 
+# esp32:
+#   board: m5stack-atom
+#   framework:
+#     type: esp-idf
+# 
+# i2s_audio:
+#   - id: i2s_audio_bus
+#     i2s_lrclk_pin: GPIO33
+#     i2s_bclk_pin: GPIO19
+# 
+# microphone:
+#   - platform: i2s_audio
+#     id: atom_mic
+#     adc_type: external
+#     i2s_din_pin: GPIO23
+#     pdm: true
+# 
+# speaker:
+#   - platform: i2s_audio
+#     id: atom_speaker
+#     dac_type: external
+#     i2s_dout_pin: GPIO22
+# 
+# voice_assistant:
+#   microphone: atom_mic
+#   speaker: atom_speaker
+#   
+#   # Using custom wake word
+#   micro_wake_word:
+#     model: hey_arnie.tflite
+#     probability_cutoff: 0.5
+# 
+# -----------------------------------------------------------
+# Tuning tips:
+# -----------------------------------------------------------
+#
+# If it triggers too easily (false positives):
+#   - Increase probability_cutoff (try 0.6 or 0.7)
+#   - Increase sliding_window_size (try 15 or 20)
+#
+# If it doesn't trigger enough (false negatives):
+#   - Decrease probability_cutoff (try 0.4 or 0.3)
+#   - Record more training samples with varied voices/distances
+#
+# Test with: Developer Tools > States > find your device
+# Watch for wake word detection events in logs

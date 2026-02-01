@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+.venv/
+
+# Training artifacts (large files)
+microWakeWord/
+*.tflite
+samples/positive/*.wav
+samples/negative/*.wav
+
+# Keep sample directories but not content
+!samples/positive/.gitkeep
+!samples/negative/.gitkeep
+!trained_model/.gitkeep
+
+# macOS
+.DS_Store
+*.aiff
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temp files
+*.tmp
+*.temp
+temp_*.wav
